@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>合作模式 - 才赋生涯® | 区县合伙人保本共赢计划 · 收益测算</title>
+    <meta name="description" content="才赋生涯®区县合伙人保本共赢计划：5万元保证金，先回本后分钱，两年期未回本差额补齐。AI全案赋能，零风险创业，高收益回报。">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Animation Libraries -->
+    <link href="https://unpkg.com/splitting@1.0.6/dist/splitting.css" rel="stylesheet">
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.min.js"></script>
+    
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    
+    <style>
+        :root {
+            --trust-blue: #1e3a8a;
+            --medium-blue: #3b82f6;
+            --success-gold: #f59e0b;
+            --bright-gold: #fbbf24;
+            --text-dark: #1f2937;
+            --text-medium: #6b7280;
+            --bg-light: #fafafa;
+            --border-light: #e5e7eb;
+        }
+        
+        * {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--trust-blue), var(--success-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--success-gold), var(--bright-gold));
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--trust-blue), var(--medium-blue));
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.4);
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 120px;
+            font-weight: 700;
+            color: rgba(30, 58, 138, 0.03);
+            pointer-events: none;
+            z-index: -1;
+            white-space: nowrap;
+        }
+        
+        .slider-container {
+            position: relative;
+        }
+        
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e5e7eb;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .slider:hover {
+            opacity: 1;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--success-gold);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--success-gold);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
+        
+        .benefit-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .process-step {
+            position: relative;
+        }
+        
+        .process-step::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: var(--success-gold);
+            font-weight: bold;
+        }
+        
+        .process-step:last-child::after {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .process-step::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- 水印装饰 -->
+    <div class="watermark font-serif">才赋生涯</div>
+    
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-18">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-800 to-amber-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">才</span>
+                    </div>
+                    <div>
+                        <h1 class="font-serif font-bold text-xl text-gray-900">才赋生涯®</h1>
+                        <p class="text-xs text-gray-600">中国青少年生涯规划研究院</p>
+                    </div>
+                </div>
+                
+                <!-- 导航菜单 -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-blue-800 font-medium transition-colors">首页</a>
+                    <a href="products.html" class="text-gray-700 hover:text-blue-800 font-medium transition-colors">产品服务</a>
+                    <a href="partnership.html" class="text-blue-800 font-bold">合作模式</a>
+                    <a href="about.html" class="text-gray-700 hover:text-blue-800 font-medium transition-colors">关于我们</a>
+                </div>
+                
+                <!-- CTA按钮 -->
+                <div class="flex items-center space-x-3">
+                    <span class="hidden sm:block text-sm text-gray-600">咨询热线:</span>
+                    <span class="hidden sm:block font-bold text-blue-800">0871-65356139</span>
+                    <button onclick="openContactModal()" class="btn-primary text-white px-6 py-2.5 rounded-lg font-medium">
+                        立即咨询
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero区域 -->
+    <section class="pt-24 pb-16 bg-gradient-to-br from-blue-900 via-blue-800 to-amber-600 text-white">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <div class="reveal">
+                <h1 class="font-serif font-bold text-4xl md:text-6xl mb-6 leading-tight">
+                    区县合伙人<span class="text-amber-400">保本共赢计划</span>
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-4xl mx-auto leading-relaxed opacity-90">
+                    5万元保证金 · 先回本后分钱 · 两年期未回本差额补齐 · AI全案赋能
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="document.getElementById('calculator').scrollIntoView({behavior: 'smooth'})" class="btn-primary text-white px-8 py-4 rounded-lg font-bold text-lg">
+                        立即测算收益
+                    </button>
+                    <button onclick="openContactModal()" class="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-lg font-bold text-lg border border-white/30 hover:bg-white/30 transition-all">
+                        预约专家咨询
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 核心机制 -->
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-serif font-bold text-4xl md:text-5xl text-gray-900 mb-6">
+                    三大<span class="gradient-text">核心机制</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    创新商业模式设计，确保合伙人零风险创业，高收益回报
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <!-- 合作门槛 -->
+                <div class="card-hover bg-gradient-to-br from-blue-50 to-indigo-100 p-8 rounded-2xl border border-blue-200 text-center">
+                    <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-2xl text-gray-900 mb-4">合作门槛</h3>
+                    <div class="text-5xl font-bold text-blue-600 mb-4">5万元</div>
+                    <p class="text-gray-600 mb-6">区县独家合伙人资格（2年期）</p>
+                    <ul class="text-sm text-gray-600 space-y-2 text-left">
+                        <li>• 品牌授权与区域保护</li>
+                        <li>• 全套运营体系输出</li>
+                        <li>• 总部规划师集中交付</li>
+                        <li>• AI工具全案赋能</li>
+                        <li>• 流量支持与营销培训</li>
+                    </ul>
+                </div>
+                
+                <!-- 回本机制 -->
+                <div class="card-hover bg-gradient-to-br from-green-50 to-emerald-100 p-8 rounded-2xl border border-green-200 text-center">
+                    <div class="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-2xl text-gray-900 mb-4">回本机制</h3>
+                    <div class="text-5xl font-bold text-green-600 mb-4">100%</div>
+                    <p class="text-gray-600 mb-6">前N单佣金全归您</p>
+                    <ul class="text-sm text-gray-600 space-y-2 text-left">
+                        <li>• 推荐客户成交，佣金100%归您</li>
+                        <li>• 累计达到5万即完成回本</li>
+                        <li>• 总部承担交付和风险</li>
+                        <li>• 您只需专注邀约和拓客</li>
+                        <li>• 快速回本，零压力创业</li>
+                    </ul>
+                </div>
+                
+                <!-- 盈利分成 -->
+                <div class="card-hover bg-gradient-to-br from-amber-50 to-yellow-100 p-8 rounded-2xl border border-amber-200 text-center">
+                    <div class="w-20 h-20 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-2xl text-gray-900 mb-4">盈利分成</h3>
+                    <div class="text-5xl font-bold text-amber-600 mb-4">70%</div>
+                    <p class="text-gray-600 mb-6">回本后高比例分成</p>
+                    <ul class="text-sm text-gray-600 space-y-2 text-left">
+                        <li>• 回本后每笔订单70%归您</li>
+                        <li>• 裂变客户同样享受分成</li>
+                        <li>• 持续收益，长期共赢</li>
+                        <li>• 总部提供持续支持</li>
+                        <li>• 收益上限高，上不封顶</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 保障机制 -->
+            <div class="reveal bg-gradient-to-br from-slate-900 to-blue-900 text-white p-8 md:p-12 rounded-3xl">
+                <div class="text-center mb-8">
+                    <h3 class="font-serif font-bold text-3xl mb-4">两年期保本保障机制</h3>
+                    <p class="text-xl opacity-90">彻底消除合伙人风险顾虑，让您安心创业</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="benefit-card p-6 rounded-2xl">
+                        <h4 class="font-bold text-xl mb-4 text-amber-400">未回本差额补齐</h4>
+                        <p class="opacity-90 mb-4">若合作期满（2年），因个人原因未能通过佣金收入回本，总部将补齐差额，确保资金安全。</p>
+                        <div class="text-sm opacity-75">
+                            <p>示例：如果您累计佣金收入只有3万元，剩余2万元差额将以等额服务消费额度形式返还（可自用或转赠）。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-card p-6 rounded-2xl">
+                        <h4 class="font-bold text-xl mb-4 text-amber-400">灵活退出机制</h4>
+                        <p class="opacity-90 mb-4">合作期内若申请退出，经审核无违规行为，根据已产生佣金收入进行结算。</p>
+                        <div class="text-sm opacity-75">
+                            <p>已回本：正常清算；未回本：按保障条款处理，确保您的投资安全。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-8">
+                    <p class="text-lg opacity-90">这意味着您的5万元投资</p>
+                    <p class="text-2xl font-bold text-amber-400">100%安全，不可能亏损！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 收益测算器 -->
+    <section id="calculator" class="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-serif font-bold text-4xl md:text-5xl text-gray-900 mb-6">
+                    互动<span class="gradient-text">收益测算</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    调整参数，实时查看您的收益潜力
+                </p>
+            </div>
+            
+            <div class="reveal grid lg:grid-cols-2 gap-12">
+                <!-- 参数设置 -->
+                <div class="bg-white p-8 rounded-2xl shadow-xl">
+                    <h3 class="font-bold text-2xl text-gray-900 mb-6">参数设置</h3>
+                    
+                    <!-- 固定投资金额 -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">合作保证金（固定）</label>
+                        <div class="bg-gray-100 p-4 rounded-lg text-center">
+                            <div class="text-3xl font-bold text-blue-600">¥50,000</div>
+                            <p class="text-sm text-gray-600 mt-1">区县独家合伙人资格</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 客单价 -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">客单价（固定）</label>
+                        <div class="bg-gray-100 p-4 rounded-lg text-center">
+                            <div class="text-3xl font-bold text-green-600">¥19,800</div>
+                            <p class="text-sm text-gray-600 mt-1">51-985全周期服务价格</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 第一年客户数 -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            预计第一年成交客户数: <span id="customerDisplay" class="text-blue-600 font-bold">20</span>个
+                        </label>
+                        <div class="slider-container">
+                            <input type="range" id="customerSlider" class="slider" min="5" max="50" value="20">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>5个</span>
+                                <span>50个</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 裂变率 -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            预计裂变率: 每个老客户裂变<span id="fissionDisplay" class="text-purple-600 font-bold">3</span>个新客户
+                        </label>
+                        <div class="slider-container">
+                            <input type="range" id="fissionSlider" class="slider" min="1" max="5" value="3" step="0.5">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>1倍</span>
+                                <span>5倍</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 成本说明 -->
+                    <div class="bg-amber-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-amber-800 mb-2">成本说明</h4>
+                        <ul class="text-sm text-amber-700 space-y-1">
+                            <li>• 固定成本：第一年3.5万元</li>
+                            <li>• 市场佣金：总产值的15%（含裂变推广费）</li>
+                            <li>• 回本后分成比例：35%（50%×70%）</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 收益展示 -->
+                <div class="bg-white p-8 rounded-2xl shadow-xl">
+                    <h3 class="font-bold text-2xl text-gray-900 mb-6">收益预测</h3>
+                    
+                    <!-- 第一年收益 -->
+                    <div class="mb-8 p-6 bg-blue-50 rounded-xl">
+                        <h4 class="font-bold text-xl text-blue-900 mb-4">第一年收益</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span>回本阶段(前5单50%):</span>
+                                <span class="font-bold text-blue-600" id="firstStageRevenue">¥49,500</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>盈利阶段(剩余35%):</span>
+                                <span class="font-bold text-blue-600" id="secondStageRevenue">¥103,950</span>
+                            </div>
+                            <hr class="border-blue-200">
+                            <div class="flex justify-between text-xl font-bold">
+                                <span>第一年总收益:</span>
+                                <span class="text-blue-600" id="firstYearRevenue">¥153,450</span>
+                            </div>
+                            <div class="text-sm text-blue-600">
+                                净利润: <span id="firstYearProfit" class="font-bold">¥118,450</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 第二年收益 -->
+                    <div class="mb-8 p-6 bg-green-50 rounded-xl">
+                        <h4 class="font-bold text-xl text-green-900 mb-4">第二年收益(含裂变)</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span>原有客户:</span>
+                                <span class="font-bold text-green-600" id="originalCustomers">20个</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>裂变新增客户:</span>
+                                <span class="font-bold text-green-600" id="fissionCustomers">60个</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>总客户数:</span>
+                                <span class="font-bold text-green-600" id="totalCustomers">80个</span>
+                            </div>
+                            <hr class="border-green-200">
+                            <div class="flex justify-between text-xl font-bold">
+                                <span>第二年总收益:</span>
+                                <span class="text-green-600" id="secondYearRevenue">¥554,400</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 两年总计 -->
+                    <div class="p-6 bg-gradient-to-br from-amber-100 to-yellow-100 rounded-xl border-2 border-amber-300">
+                        <h4 class="font-bold text-xl text-amber-900 mb-4">两年总收益</h4>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-amber-600 mb-2" id="totalRevenue">¥707,850</div>
+                            <div class="text-sm text-amber-700">
+                                投资回报率: <span class="font-bold text-xl" id="roi">1,316%</span>
+                            </div>
+                            <div class="text-sm text-amber-600 mt-2">
+                                月均收益: <span class="font-bold" id="monthlyAvg">¥29,494</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 收益图表 -->
+            <div class="reveal mt-12">
+                <div class="bg-white p-8 rounded-2xl shadow-xl">
+                    <h3 class="font-bold text-2xl text-gray-900 mb-6 text-center">收益趋势图</h3>
+                    <div id="revenueChart" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- AI全案赋能 -->
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-serif font-bold text-4xl md:text-5xl text-gray-900 mb-6">
+                    <span class="gradient-text">AI全案</span>垂直赋能
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    聚焦青少年生涯规划垂直领域，整合前端获客、中端服务、后端管理的AI工具矩阵
+                </p>
+            </div>
+            
+            <div class="reveal grid md:grid-cols-2 gap-12 items-center mb-16">
+                <div>
+                    <img src="resources/ai-tech.jpg" alt="AI科技赋能" class="w-full rounded-2xl shadow-xl">
+                </div>
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-gray-900 mb-2">刘婕 - 内容创作生产</h3>
+                            <p class="text-gray-600">互联网矩阵运营、AI拓客、AI客服、AI专业内容生产、AI行业垂直智能体</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-gray-900 mb-2">李海燕 - 销冠复制系统</h3>
+                            <p class="text-gray-600">数字员工手机（7×24小时无休工作）、共享店铺分钱系统、日不落直播985拓客卡带货系统</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-gray-900 mb-2">刘敏 - CRM客户管理</h3>
+                            <p class="text-gray-600">客户资源管理系统，查看服务进度、记录客户反馈、时时维护客情关系</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-amber-50 to-yellow-100 p-6 rounded-xl mt-8">
+                        <h4 class="font-bold text-xl text-amber-900 mb-3">AI工具核心价值</h4>
+                        <ul class="space-y-2 text-amber-800">
+                            <li>• <strong>降本增效：</strong>减少人工成本，提升运营效率</li>
+                            <li>• <strong>7×24小时：</strong>全天候工作，不错过任何商机</li>
+                            <li>• <strong>标准化输出：</strong>确保服务质量稳定可控</li>
+                            <li>• <strong>数据驱动：</strong>精准分析，科学决策</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 合作流程 -->
+    <section class="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-serif font-bold text-4xl md:text-5xl text-gray-900 mb-6">
+                    三步<span class="gradient-text">合作流程</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    简单清晰的合作流程，快速启动您的创业之路
+                </p>
+            </div>
+            
+            <div class="reveal grid md:grid-cols-3 gap-8">
+                <div class="process-step bg-white p-8 rounded-2xl shadow-xl text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl font-bold text-white">1</span>
+                    </div>
+                    <h3 class="font-bold text-2xl text-gray-900 mb-4">支付诚意金</h3>
+                    <div class="text-3xl font-bold text-blue-600 mb-4">¥5,000</div>
+                    <ul class="text-sm text-gray-600 space-y-2 text-left">
+                        <li>• 锁定创始合伙人资格</li>
+                        <li>• 享受所有优惠政策</li>
+                        <li>• 签约成功可抵2万元</li>
+                        <li>• 获得专属顾问对接</li>
+                    </ul>
+                </div>
+                
+                <div class="process-step bg-white p-8 rounded-2xl shadow-xl text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl font-bold text-white">2</span>
+                    </div>
+                    <h3 class="font-bold text-2xl text-gray-900 mb-4">深度沟通</h3>
+                    <div class="text-3xl font-bold text-green-600 mb-4">补尾款</div>
+                    <ul class="text-sm text-gray-600 space-y-2 text-left">
+                        <li>• 一对一深度沟通</li>
+                        <li>• 补足尾款¥30,000</li>
+                        <li>• 签署正式合作协议</li>
+                        <li>• 明确权利义务</li>
+                    </ul>
+                </div>
+                
+                <div class="process-step bg-white p-8 rounded-2xl shadow-xl text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl font-bold text-white">3</span>
+                    </div>
+                    <h3 class="font-bold text-2xl text-gray-900 mb-4">启动运营</h3>
+                    <div class="text-3xl font-bold text-amber-600 mb-4">开始赚钱</div>
+                    <ul class="text-sm text-gray-600 space-y-2 text-left">
+                        <li>• 发放运营工具包</li>
+                        <li>• AI系统培训指导</li>
+                        <li>• 启动客户拓展工作</li>
+                        <li>• 总部持续支持赋能</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 时间线 -->
+            <div class="reveal mt-16 bg-white p-8 rounded-2xl shadow-xl">
+                <h3 class="font-bold text-2xl text-gray-900 mb-8 text-center">合作时间线</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-xl font-bold text-blue-600">D1</span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">第1天</h4>
+                        <p class="text-sm text-gray-600">支付诚意金，锁定资格</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-xl font-bold text-green-600">D3</span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">第3天</h4>
+                        <p class="text-sm text-gray-600">深度沟通，签署协议</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-xl font-bold text-amber-600">D7</span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">第7天</h4>
+                        <p class="text-sm text-gray-600">完成培训，启动运营</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-xl font-bold text-purple-600">D30</span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">第30天</h4>
+                        <p class="text-sm text-gray-600">首月目标，开始回本</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 成功案例 -->
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-serif font-bold text-4xl md:text-5xl text-gray-900 mb-6">
+                    云南<span class="gradient-text">样板市场</span>验证
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    才赋生涯在云南市场已成功验证商业模式，为全国复制奠定基础
+                </p>
+            </div>
+            
+            <div class="reveal grid md:grid-cols-2 gap-12 items-center mb-16">
+                <div>
+                    <img src="resources/partnership.jpg" alt="云南样板市场" class="w-full rounded-2xl shadow-xl">
+                </div>
+                <div class="space-y-6">
+                    <h3 class="font-serif font-bold text-3xl text-gray-900">云南市场成果</h3>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="text-center p-6 bg-blue-50 rounded-xl">
+                            <div class="text-3xl font-bold text-blue-600 mb-2">40+</div>
+                            <p class="text-gray-600">覆盖云南区县</p>
+                        </div>
+                        
+                        <div class="text-center p-6 bg-green-50 rounded-xl">
+                            <div class="text-3xl font-bold text-green-600 mb-2">5000+</div>
+                            <p class="text-gray-600">服务学子数量</p>
+                        </div>
+                        
+                        <div class="text-center p-6 bg-amber-50 rounded-xl">
+                            <div class="text-3xl font-bold text-amber-600 mb-2">18年</div>
+                            <p class="text-gray-600">深耕云南市场</p>
+                        </div>
+                        
+                        <div class="text-center p-6 bg-purple-50 rounded-xl">
+                            <div class="text-3xl font-bold text-purple-600 mb-2">95%+</div>
+                            <p class="text-gray-600">客户满意度</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-slate-50 to-blue-50 p-6 rounded-xl">
+                        <h4 class="font-bold text-lg text-gray-900 mb-3">成功验证的关键要素</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li>• 标准化的51-985服务体系</li>
+                            <li>• 李军老师18年行业深耕经验</li>
+                            <li>• 完整的合伙人扶持机制</li>
+                            <li>• AI工具的全案赋能支持</li>
+                            <li>• 区县合伙人的积极参与</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 全国发展战略 -->
+            <div class="reveal bg-gradient-to-br from-slate-900 to-blue-900 text-white p-8 md:p-12 rounded-3xl">
+                <div class="text-center mb-8">
+                    <h3 class="font-serif font-bold text-3xl mb-4">全国发展战略</h3>
+                    <p class="text-xl opacity-90">以云南为样板，快速复制至全国市场</p>
+                </div>
+                
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-xl font-bold text-white">1</span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">云南样板</h4>
+                        <p class="text-sm opacity-75">已完成，验证成功</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-xl font-bold text-white">2</span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">西南扩张</h4>
+                        <p class="text-sm opacity-75">西安、成都、新疆</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-xl font-bold text-white">3</span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">全国布局</h4>
+                        <p class="text-sm opacity-75">覆盖30%区县市场</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-xl font-bold text-white">4</span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">行业领导</h4>
+                        <p class="text-sm opacity-75">成为行业标杆品牌</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA区域 -->
+    <section class="py-20 bg-gradient-to-br from-slate-900 to-blue-900 text-white">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="reveal">
+                <h2 class="font-serif font-bold text-4xl md:text-5xl mb-6">
+                    立即加入才赋生涯<br>
+                    <span class="text-amber-400">共创万亿市场</span>
+                </h2>
+                <p class="text-xl mb-8 opacity-90">
+                    区县合伙人保本共赢计划，零风险创业，高收益回报<br>
+                    18年品牌积淀，AI全案赋能，标准化体系支撑
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                    <button onclick="openContactModal()" class="btn-primary text-white px-8 py-4 rounded-lg font-bold text-lg">
+                        立即咨询合伙人计划
+                    </button>
+                    <button onclick="window.location.href='products.html'" class="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-lg font-bold text-lg border border-white/30 hover:bg-white/30 transition-all">
+                        了解产品服务体系
+                    </button>
+                </div>
+                
+                <div class="text-sm opacity-75">
+                    <p>咨询热线：0871-65356139 | 微信咨询：caifushengya</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-800 to-amber-500 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">才</span>
+                        </div>
+                        <div>
+                            <h3 class="font-serif font-bold text-xl">才赋生涯®</h3>
+                            <p class="text-sm text-gray-400">中国青少年生涯规划研究院</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4 leading-relaxed">
+                        才赋生涯®是中国青少年生涯规划研究院直属品牌，依托研究院的学术资源、专家团队和标准化体系，为合作伙伴提供品牌授权+AI工具输出+研究院认证运营扶持+流量支持的全链条赋能服务。
+                    </p>
+                    <div class="text-sm text-gray-400">
+                        <p>© 2025 才赋生涯® 版权所有</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">产品服务</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="products.html" class="hover:text-white transition-colors">51-985全周期体系</a></li>
+                        <li><a href="products.html" class="hover:text-white transition-colors">985贵宾卡</a></li>
+                        <li><a href="products.html" class="hover:text-white transition-colors">AI全案赋能</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">专家团队</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">合作咨询</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">区县合伙人计划</a></li>
+                        <li><a href="#calculator" class="hover:text-white transition-colors">收益测算</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">关于我们</a></li>
+                        <li><a href="javascript:void(0)" onclick="openContactModal()" class="hover:text-white transition-colors">联系我们</a></li>
+                    </ul>
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-400">咨询热线</p>
+                        <p class="font-bold text-amber-400">0871-65356139</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- 联系弹窗 -->
+    <div id="contactModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full">
+            <div class="text-center mb-6">
+                <h3 class="font-serif font-bold text-2xl text-gray-900 mb-2">咨询联系方式</h3>
+                <p class="text-gray-600">选择您方便的咨询方式</p>
+            </div>
+            
+            <div class="space-y-4 mb-6">
+                <div class="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
+                    <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">电话咨询</p>
+                        <p class="text-blue-600 font-bold text-lg">0871-65356139</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4 p-4 bg-green-50 rounded-lg">
+                    <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">微信咨询</p>
+                        <p class="text-green-600 font-bold">caifushengya</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button onclick="closeContactModal()" class="w-full bg-gray-200 text-gray-800 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+    <script>
+        // 收益测算器初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            new RevenueCalculator();
+        });
+    </script>
+</body>
+</html>
